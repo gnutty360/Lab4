@@ -20,12 +20,12 @@ int main(int argc, char* argv[]){
 	int fileNumber;
 	FILE* fp = NULL;
 	
-/*
+
 	if(argc <3){
 		printf("\nInvalid number of command line arguements!");
 		return(1);
 	}
-*/
+
 	
 	
 	if((argv[1][0] == '-') && (argv[1][1] == 'n')){
@@ -56,9 +56,9 @@ int main(int argc, char* argv[]){
 FILE* openFile(int fileNumber){
 
 	switch(fileNumber){
-case 1:
-case 2:
-case 3:
+	case 1:
+	case 2:
+	case 3:
 	
 	}
 }
