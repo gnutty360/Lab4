@@ -9,17 +9,28 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define LARGESTNUMBER 10
+
 int checkCommandLineNumbers(char*);
 FILE* openFile(int);
 void closeFile(int);
 int argumentDecision(char*, int);
 int checkArguments(char**, int);
 
+void scale (FILE*, double);
+void offset (FILE*, double);
+void renameFile (FILE*, char*);
+void help();
+void statistics(FILE*);
+void centerData(FILE*);
+void normalize(FILE*);
+
 
 int main(int argc, char* argv[]){
 
 	int fileNumber;
 	int i;
+	double numnber;
 	FILE* fp = NULL;
 	
 	//Checks to see if the user inputed enough arguments to open a file
@@ -27,58 +38,18 @@ int main(int argc, char* argv[]){
 		printf("\nInvalid number of command line arguements!");
 		return(1);
 	}
-
-	
-	//Checks to make sure the second argument is '-n' followed by an appropriate
-	//number. If not the program will terminate with an error message.
-	if((argv[1][0] == '-') && (argv[1][1] == 'n')){
-		
-		fileNumber = atoi(argv[2]);
-		if(!fileNumber || fileNumber < 1 || fileNumber > 11 ){
-			printf("\nIvalid file number");
-			return(1);
-		}
-
-	}else{
-		printf("\nFirst command line argument is invalid!\n"
-			"Please specify the file number by -n [file number]");
-		return(1);
-	}
-
-	
-	
-	//File number should be valid at this point. 
-	//Going to open the specified data file and error check the opening of 
-	//said file. 
-	
-
-	fp = openFile(fileNumber);
-	if(fp == NULL){
-		printf("\nProblem opening file #%d. Terminating program", fileNumber);
-		fclose(fp);
-		return(1);
-	}else{
-		printf("\nThe file is open");
-	}
-
 	
 
 
+	//Makes sure all of the command line arguments are properly inputed
+	//Returns error messages if they aren't.
 	if(checkArguments(argv, argc)){
+		return(1);
 	}
-	
-	
-	//while(argumentDecision(argv, argc));
-	
-		
-	
 
-	//Close the file and exit.
-	if(fclose(fp)){
-		printf("\nFile was not closed correctly");
-	}else{
-		printf("\nThe file has closed correctly");
-	}
+
+
+
 
 
 	return(EXIT_SUCCESS);
@@ -142,36 +113,52 @@ FILE* openFile(int fileNumber){
 
 int checkArguments(char** argv, int argc){
 	int i;
-	for(i = 3; i < argc; i++){
+	char file = 0;
+	double number;
+	for(i = 1; i < argc; i++){
 		
 		if(!strcmp(argv[i], "-s")){
-			printf("\nWe have liftoff");
-
+			i++;
+			number = atof(argv[i]);
+			if(number == 0){
+				printf("\nArgument %d:'%s' is invalid! Use '-h' for options", i, argv[i]);
+				return(1);
+			}
+				
+		}else if(!strcmp(argv[i], "-n")){
+			i++;
+			file++;
+			number = atof(argv[i]);
+			if(number == 0){
+				printf("\nArgument %d:'%s' is invalid! Use '-h' for options", i, argv[i]);
+				return(1);
+			}
+		}else if(!strcmp(argv[i], "-o")){
+			i++;
+			number = atof(argv[i]);
+			if(number == 0){
+				printf("\nArgument %d:'%s' is invalid! Use '-h' for options", i, argv[i]);
+				return(1);
+			}
+		}else if(!strcmp(argv[i], "-r")){
+			i++;
+		}else if(!strcmp(argv[i], "-h")){
+		}else if(!strcmp(argv[i], "-S")){
+		}else if(!strcmp(argv[i], "-C")){
+		}else if(!strcmp(argv[i], "-N")){
 		}else{
-			printf("\nArgument %d:%s is invalid! Please try again!", i, argv[i]);
+			printf("\nArgument %d:'%s' is invalid! Use '-h' for options", i, argv[i]);
 			return(1);
 		}
-
 	}
-		
+	
+	if(file < 1){
+		printf("\nNo data file specified! Use '-h' for options");
+		return(1);
+	}else if(file > 1){
+		printf("\nCannot open more than one data file at a time!\n"
+				"Use '-h' for options");
+	}
+	
 	return(0);
 }
-
-
-
-/*
-int argumentDecision(char* argv, int argc){
-	int i;
-
-	for(i = 4; i < argc; i++){
-		switch(argv[i]){
-
-			default:
-				printf("\nArgument %d: %s is invalid!", i, argv[i]);
-				return(0);
-
-
-		}
-
-}
-*/
