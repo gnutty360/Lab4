@@ -49,7 +49,7 @@ int main(int argc, char* argv[]){
 		printf("\nFile could not be opened!");
 		return(1);
 	}
-	printf("\nfileNumber in main: %d", fileNumber);
+	
 	argumentDecision(argv, argc, fp, &fileNumber);
 	
 	
@@ -71,11 +71,10 @@ FILE* openFile(char** argv, int argc, int* fileNumPtr){
 		if(!strcmp(argv[i], "-n")){
 			i++;
 			fileNumber = atoi(argv[i]);
-			fileNumPtr = &fileNumber;
+			*fileNumPtr = fileNumber;
 		}
 	}
 	
-	printf("\nfileName assigned value: %d", *fileNumPtr);
 	
 	//I really do not like this switch statement.
 	//I could probably split the string and then concatenate to make
@@ -234,8 +233,8 @@ void scale(FILE* fp, double value, int* fileNumber){
 	int i;
 	
 	sprintf(newFileName, "Scaled_Data_%.2d.txt", *fileNumber);
-	printf("\nfileNumber: %d", *fileNumber);
-	printf("\n%s", newFileName);
+	printf("\nOpening %s...", newFileName);
+	
 	newFP = fopen(newFileName, "w");
 	if(newFP == NULL){
 		printf("\nUnable create file %s. Scaling terminated!", newFileName);
@@ -252,7 +251,11 @@ void scale(FILE* fp, double value, int* fileNumber){
 	
 	fprintf(newFP, "%d %d\t %d %d", numberOfData, largestData, numberOfData, (int)(value)*largestData);
 	
-	fclose(newFP);
+	
+	printf("\nClosing %s...", newFileName);
+	if(fclose(newFP) != 0){
+		printf("\nFile was not close successfully!");
+	}
 	free(dataArray);
 	
 	return;
