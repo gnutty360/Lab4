@@ -25,7 +25,7 @@ void normalize(FILE*, int*);
 int main(int argc, char* argv[]){
 
 	int number;
-	int* fileNumber;
+	int fileNumber;
 	FILE* fp = NULL;
 	
 	//Checks to see if the user inputed enough arguments to open a file
@@ -43,14 +43,14 @@ int main(int argc, char* argv[]){
 	}
 	//Attempts to open the file. If the file does not open, or if the file number
 	//isn't valid, returns NULL.
-	fp = openFile(argv, argc, fileNumber);
+	fp = openFile(argv, argc, &fileNumber);
 	
 	if(fp == NULL){
 		printf("\nFile could not be opened!");
 		return(1);
 	}
-	
-	argumentDecision(argv, argc, fp, fileNumber);
+	printf("\nfileNumber in main: %d", fileNumber);
+	argumentDecision(argv, argc, fp, &fileNumber);
 	
 	
 	if(fclose(fp) != 0){
@@ -75,7 +75,7 @@ FILE* openFile(char** argv, int argc, int* fileNumPtr){
 		}
 	}
 	
-	
+	printf("\nfileName assigned value: %d", *fileNumPtr);
 	
 	//I really do not like this switch statement.
 	//I could probably split the string and then concatenate to make
@@ -84,55 +84,44 @@ FILE* openFile(char** argv, int argc, int* fileNumPtr){
 	switch(fileNumber){
 	case 1:
 		strcpy(fileName, "Raw_data_01.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 2:
 		strcpy(fileName, "Raw_data_02.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 3:
 		strcpy(fileName, "Raw_data_03.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 4:
 		strcpy(fileName, "Raw_data_04.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 5:
 		strcpy(fileName, "Raw_data_05.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 6:
 		strcpy(fileName, "Raw_data_06.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 7:
 		strcpy(fileName, "Raw_data_07.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 8:
 		strcpy(fileName, "Raw_data_08.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 9:
 		strcpy(fileName, "Raw_data_09.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 10:
 		strcpy(fileName, "Raw_data_10.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	case 11:
 		strcpy(fileName, "Raw_data_11.txt");
-		printf("\nOpening %s...", fileName);
 		break;
 	default:
 		printf("\nInvalid file number!");
 		return(NULL);
 
 	}
-
-	
+		
+	printf("\nOpening %s...", fileName);
 	FILE* fp = fopen(fileName, "r");
 	
 	if(fp == NULL){
@@ -245,7 +234,8 @@ void scale(FILE* fp, double value, int* fileNumber){
 	int i;
 	
 	sprintf(newFileName, "Scaled_Data_%.2d.txt", *fileNumber);
-	
+	printf("\nfileNumber: %d", *fileNumber);
+	printf("\n%s", newFileName);
 	newFP = fopen(newFileName, "w");
 	if(newFP == NULL){
 		printf("\nUnable create file %s. Scaling terminated!", newFileName);
