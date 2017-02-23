@@ -50,7 +50,7 @@ int main(int argc, char* argv[]){
 	
 	argumentDecision(argv, argc, fp, &fileNumber);
 	
-	
+	printf("\nClosing file!");
 	if(fclose(fp) != 0){
 		printf("\nFile was not close successfully!");
 	}
@@ -357,14 +357,128 @@ void help(){
 }
 void statistics (FILE* fp, int* fileNumber){
 	
+	FILE* newFP;
+	int i;
+	int buffer;
+	int numberOfData;
+	int largestNumber;
+	int biggestNumber = 0;
+	char newFileName[25];
+	double mean = 0.0;
+	
+	rewind(fp);
+	
+	sprintf(newFileName, "Statistics_Data_%.2d.txt", *fileNumber);
+	printf("\nOpening %s...", newFileName);
+	
+	newFP = fopen(newFileName, "w");
+	if(newFP == NULL){
+		printf("\nUnable create file %s. Statistics terminated!", newFileName);
+		return;
+	}
+	
+	fscanf(fp, "%d %d", &numberOfData, &largestNumber);
+	
+	for(i = 0; i < numberOfData; i++){
+		fscanf(fp, "%d", &buffer);
+		if(buffer > biggestNumber){
+			biggestNumber = buffer;
+		}
+		mean += buffer;
+	}
+	
+	mean = mean / (double)(numberOfData);
+	
+	fprintf(newFP, "%.4f %d", mean, biggestNumber);
+	
+	
+	printf("\nClosing %s...", newFileName);
+	if(fclose(newFP) != 0){
+		printf("\nFile was not close successfully!");
+	}
+	
+	
 }
 void centerData (FILE* fp, int* fileNumber){
 	
+	FILE* newFP;
+	int i;
+	int* dataArray;
+	int numberOfData;
+	int largestNumber;
+	char newFileName[25];
+	double mean = 0.0;
+	
+	rewind(fp);
+	
+	sprintf(newFileName, "Centered_Data_%.2d.txt", *fileNumber);
+	printf("\nOpening %s...", newFileName);
+	
+	newFP = fopen(newFileName, "w");
+	if(newFP == NULL){
+		printf("\nUnable create file %s. Statistics terminated!", newFileName);
+		return;
+	}
+	
+	fscanf(fp, "%d %d", &numberOfData, &largestNumber);
+	dataArray = malloc(numberOfData * sizeof(int));
+	
+	for(i = 0; i < numberOfData; i++){
+		fscanf(fp, "%d", &dataArray[i]);
+		mean += dataArray[i];
+		
+	}
+	mean = mean / (double)(numberOfData);
+	fprintf(newFP, "%d %d\t\t%d %.4f", numberOfData, largestNumber, numberOfData, (double)(largestNumber)-mean);
+	for(i = 0; i < numberOfData; i++){
+		fprintf(newFP, "\n%d\t\t%.4f", dataArray[i], (double)(dataArray[i]) - mean); 
+	}
+	
+	
+	printf("\nClosing %s...", newFileName);
+	if(fclose(newFP) != 0){
+		printf("\nFile was not close successfully!");
+	}
+	free(dataArray);
 }
 void normalize (FILE* fp, int* fileNumber){
+	FILE* newFP;
+	int i;
+	int* dataArray;
+	int numberOfData;
+	int largestNumber;
+	char newFileName[25];
+	
+	rewind(fp);
+	
+	sprintf(newFileName, "Normalized_Data_%.2d.txt", *fileNumber);
+	printf("\nOpening %s...", newFileName);
+	
+	newFP = fopen(newFileName, "w");
+	if(newFP == NULL){
+		printf("\nUnable create file %s. Statistics terminated!", newFileName);
+		return;
+	}
+	
+	fscanf(fp, "%d %d", &numberOfData, &largestNumber);
+	dataArray = malloc(numberOfData * sizeof(int));
+	
+	for(i = 0; i < numberOfData; i++){
+		fscanf(fp, "%d", &dataArray[i]);
+		
+	}
+	
+	fprintf(newFP, "%d %d\t\t%d %.4f", numberOfData, largestNumber, numberOfData, (double)(largestNumber) / (double)(largestNumber));
+	for(i = 0; i < numberOfData; i++){
+		fprintf(newFP, "\n%d\t\t%.4f", dataArray[i], (double)(dataArray[i]) / (double)(largestNumber)); 
+	}
+	
+	
+	printf("\nClosing %s...", newFileName);
+	if(fclose(newFP) != 0){
+		printf("\nFile was not close successfully!");
+	}
+	free(dataArray);
 	
 }
 
-double mean(int* dataArray){
-	
-}
